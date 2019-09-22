@@ -7,7 +7,7 @@ Gem::Specification.new 'lusnoc', Lusnoc::VERSION do |spec|
   spec.homepage      = 'https://github.com/RnD-Soft/lusnoc'
   spec.license       = 'MIT'
 
-  spec.files         = `git ls-files -z lib/lusnoc.rb lib/lusnoc README.md LICENSE features`.split("\n").reject do |f|
+  spec.files         = `git ls-files -z lib/lusnoc.rb lib/lusnoc README.md LICENSE features`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
   end
 

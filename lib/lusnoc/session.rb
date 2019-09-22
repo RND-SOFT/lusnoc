@@ -7,7 +7,7 @@ module Lusnoc
 
     attr_reader :id, :name, :ttl, :live, :expired_at
 
-    def initialize(name, ttl: 10)
+    def initialize(name, ttl: 20)
       @name = name
       @ttl = ttl
 
@@ -19,6 +19,14 @@ module Lusnoc
 
     def expired?
       !live?
+    end
+
+    def time_to_expiration
+      @expired_at && @expired_at - Time.now
+    end
+
+    def need_renew?
+      time_to_expiration && time_to_expiration < (@ttl / 2.0)
     end
 
     def live?
@@ -33,7 +41,7 @@ module Lusnoc
       live!
       Lusnoc.http_put(build_url("/v1/session/renew/#{@id}"), nil, timeout: 1)
       @expired_at = Time.now + ttl
-      logger.debug "Session renewed: #{name}[#{@id}]. Next expiration: #{@expired_at}"
+      logger.info "Session renewed: #{name}[#{@id}]. Next expiration: #{@expired_at}"
     end
 
     def on_session_die(&block)
@@ -44,11 +52,11 @@ module Lusnoc
 
       def create_session(name, ttl)
         resp = Lusnoc.http_put(build_url('/v1/session/create'),
-                               { Name: name, TTL: "#{ttl}s" },
+                               { Name: name, TTL: "#{ttl}s", LockDelay: '5s' },
                                { timeout: 1 })
         session_id = JSON.parse(resp.body)['ID']
         @expired_at = Time.now + ttl
-        logger.debug "Session created: #{name}[#{session_id}]. TTL:#{ttl}s. Next expiration: #{@expired_at}"
+        logger.info "Session created: #{name}[#{session_id}]. TTL:#{ttl}s. Next expiration: #{@expired_at}"
         @live = true
         @th = start_watch_thread(session_id)
         session_id
@@ -59,7 +67,7 @@ module Lusnoc
         Lusnoc.http_put(build_url("/v1/session/destroy/#{session_id}"),
                         nil,
                         timeout: 1) rescue nil
-        logger.debug "Session destroyed: #{name}[#{session_id}]"
+        logger.info "Session destroyed: #{name}[#{session_id}]"
         @live = false
         @expired_at = nil
       end
