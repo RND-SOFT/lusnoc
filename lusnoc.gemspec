@@ -3,7 +3,7 @@ require './lib/lusnoc/version'
 Gem::Specification.new 'lusnoc', Lusnoc::VERSION do |spec|
   spec.authors       = ['Samoilenko Yuri']
   spec.email         = ['kinnalru@gmail.com']
-  spec.description   = spec.summary = 'asd'
+  spec.description   = spec.summary = 'Lusnoc is reliable gem to deal with consul'
   spec.homepage      = 'https://github.com/RnD-Soft/lusnoc'
   spec.license       = 'MIT'
 
