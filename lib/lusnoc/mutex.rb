@@ -7,7 +7,7 @@ module Lusnoc
     include Helper
     attr_reader :key, :value, :owner
 
-    def initialize(key, value = Socket.gethostname, ttl: 20)
+    def initialize(key, value: Socket.gethostname, ttl: 20)
       @key = key
       @value = value
       @ttl = ttl
