@@ -95,3 +95,15 @@ Typical usage scenario:
   end
 ```
 
+# Installation
+
+It's a gem:
+```bash
+  gem install luscon
+```
+There's also the wonders of [the Gemfile](http://bundler.io):
+```ruby
+  gem 'luscon'
+```
+
+
