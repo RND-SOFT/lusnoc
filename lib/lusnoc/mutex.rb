@@ -25,8 +25,12 @@ module Lusnoc
       @session&.id
     end
 
-    [:time_to_expiration, :need_renew?, :ttl, :expired?, :live?, :live!, :renew].each do |m|
+    [:time_to_expiration, :need_renew?, :ttl, :expired?, :alive?, :alive!, :renew].each do |m|
       define_method(m) { @session&.public_send(m) }
+    end
+
+    def on_mutex_lost(&block)
+      @on_mutex_lost = block
     end
 
     def synchronize(timeout: 0, &block)
@@ -38,6 +42,7 @@ module Lusnoc
         @session = session
         session.on_session_die do
           @owner = nil
+          @on_mutex_lost&.call(self)
         end
 
         return acquisition_loop! key, session, value, timeouter, &block
@@ -70,7 +75,7 @@ module Lusnoc
 
         logger.debug("Start #{key} acquisition loop for session #{session.name}[#{session.id}]")
         timeouter.loop! do
-          session.live!(TimeoutError)
+          session.alive!(TimeoutError)
           wait_for_key_released(key, timeouter.left)
 
           return yield(self) if acquire(key, session, value)
