@@ -43,7 +43,7 @@ reason, you'd like to set the value to something else, you can do that, too:
     #...
   end
 ```
-Session invalidation/renewval handled through mutex instance:
+Session invalidation/renewal handled through mutex instance:
 ```ruby
   Luscon::Mutex.new('/some/key').synchronize do |mx|
     mx.time_to_expiration # seconds to session expiration in consul. 
