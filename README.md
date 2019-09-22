@@ -1,6 +1,6 @@
 # Lusnoc
 
-Lusnoc is reliable gem to deal with [Consul](https://www.consul.io). It is designed to be simple and without any background magic.
+Lusnoc is reliable gem to deal with [Consul](https://www.consul.io). It is designed to be simple and work without dark background magic.
 It is inspired by [consul-mutex](https://github.com/discourse/consul-mutex)(which has hard background magic). 
 
 ## FAQ
