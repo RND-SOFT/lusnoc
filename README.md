@@ -13,7 +13,7 @@ Lusnoc allows you to interact with Consul to provide distributed locks(mutex) to
 * consul-mutex starts background thread and  ***the block of code that you pass to #synchronize runs on a separate thread, and can be killed without warning if the mutex determines that it no longer holds the lock.***
 * diplomat provides the basic session/locks functionality but no automated control over it
 
-#### How luscon deal with sessions/mutexes?
+#### How Lusnoc deal with sessions/mutexes?
 * Lusnoc ensures session creation/destruction upon block execution
 * Lusnoc uses only sessions with TTL to protect you system from stale sessions/locks
 * Lusnoc enforces you to manualy renew session(through callback or explicit check) but provide background session checker
@@ -25,7 +25,7 @@ Simply instantiate a new `Lusnoc::Mutex`, giving it the key you want to use
 as the "lock":
 
 ```ruby
-  require 'luscon/mutex'
+  require 'lusnoc/mutex'
   mutex = Lusnoc::Mutex.new('/locks/mx1', ttl: 20)
 ```
 TTL will be used in session creation on `#synchronize`:
@@ -99,11 +99,11 @@ Typical usage scenario:
 
 It's a gem:
 ```bash
-  gem install luscon
+  gem install lusnoc
 ```
 There's also the wonders of [the Gemfile](http://bundler.io):
 ```ruby
-  gem 'luscon'
+  gem 'lusnoc'
 ```
 
 
