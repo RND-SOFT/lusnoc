@@ -39,30 +39,59 @@ By default, the "value" of the lock resource will be the hostname of the
 machine that it's running on (so you know who has the lock).  If, for some
 reason, you'd like to set the value to something else, you can do that, too:
 ```ruby
-  Consul::Mutex.new('/some/key', value: {time: Time.now}).synchronize do |mx|
+  Luscon::Mutex.new('/some/key', value: {time: Time.now}).synchronize do |mx|
     #...
   end
 ```
 Session invalidation/renewval handled through mutex instance:
 ```ruby
-  Consul::Mutex.new('/some/key').synchronize do |mx|
+  Luscon::Mutex.new('/some/key').synchronize do |mx|
     mx.time_to_expiration # seconds to session expiration in consul. 
     mx.ttl                # session ttl. 
     mx.need_renew?        # true when time_to_expiration less than half of ttl
     
+    mx.need_renew?        # false
+    sleep (mx.ttl / 2) + 1
+    mx.need_renew?        # true
+    
     mx.on_mutex_lost do |mutex|
-      # this callback will be called from other(guard) thread
+      # this callback will be called from other(guard) thread when mutex is lost(session invalidated)
     end
     
     mx.locked?    # true while session is not expired or invalidated by admin
     mx.owned?     # true while session is not expired or invalidated by admin and owner is a Thread.current
     mx.session_id # id of Consul session
     mx.expired?   # is session expired?
-    mx.live?      # is session live?
-    mx.live!      # ensures session live or raise exception
-    mx.renew      # renew session or raise exception if session already expired
-    
+    mx.alive?     # is session alive?
+    mx.alive!     # ensures session alive or raise Lusnoc::ExpiredError
+    mx.renew      # renew session or raise Lusnoc::ExpiredError if session already expired
   end
 ```
 
+You can use only Session:
+```ruby
+  Session.new("session_name", ttl: 20) do |session|
+    session.on_session_die do
+      # this callback will be called from other(guard) thread when session invalidated
+    end
+
+    session.expired?   # is session expired?
+    session.alive?     # is session alive?
+    session.alive!     # ensures session alive or raise Lusnoc::ExpiredError
+    session.renew      # renew session or raise Lusnoc::ExpiredError if session already expired
+  end
+```
+Typical usage scenario:
+
+```ruby
+  Luscon::Mutex.new('/some/key').synchronize do |mx|
+    # do some work
+    mx.renew if mx.need_renew?
+    # do other work
+    mx.renew if mx.need_renew?
+    # ...
+  rescue Lusnoc::ExpiredError => e
+    # Session was invalidated and mutex was lost!
+  end
+```
 
