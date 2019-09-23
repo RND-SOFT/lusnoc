@@ -3,7 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/lusnoc.svg)](https://rubygems.org/gems/lusnoc)
 [![Gem](https://img.shields.io/gem/dt/lusnoc.svg)](https://rubygems.org/gems/lusnoc/versions)
 
-
+[![Maintainability](https://api.codeclimate.com/v1/badges/ed48b89a9793a074cd23/maintainability)](https://codeclimate.com/github/RnD-Soft/lusnoc/maintainability)
 [![Quality](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_quality.svg)](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_quality.html)
 [![Outdated](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_outdated.svg)](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_outdated.html)
 [![Vulnerabilities](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_vulnerable.svg)](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_vulnerable.html)
