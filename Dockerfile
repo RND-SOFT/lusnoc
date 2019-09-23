@@ -12,7 +12,7 @@ RUN mkdir -p /usr/local/etc \
   && echo 'gem: --no-document' > ~/.gemrc
 
 RUN set -ex \
-  && apk add --no-cache build-base git
+  && apk add --no-cache build-base git curl
 
 ADD Gemfile Gemfile.lock *.gemspec /home/app/
 ADD lib/lusnoc/version.rb /home/app/lib/lusnoc/
