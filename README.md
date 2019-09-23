@@ -2,6 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/lusnoc.svg)](https://rubygems.org/gems/lusnoc)
 [![Gem](https://img.shields.io/gem/dt/lusnoc.svg)](https://rubygems.org/gems/lusnoc/versions)
+[![YARD](https://badgen.net/badge/YARD/doc/blue)](http://www.rubydoc.info/gems/lusnoc)
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/ed48b89a9793a074cd23/test_coverage)](https://codeclimate.com/github/RnD-Soft/lusnoc/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/ed48b89a9793a074cd23/maintainability)](https://codeclimate.com/github/RnD-Soft/lusnoc/maintainability)
