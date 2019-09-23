@@ -1,5 +1,11 @@
 # Lusnoc
 
+[![Gem Version](https://badge.fury.io/rb/lusnoc.svg)](https://rubygems.org/gems/lusnoc)
+[![Gem](https://img.shields.io/gem/dt/lusnoc.svg)](https://rubygems.org/gems/lusnoc/versions)
+[![Quality](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_quality.svg)](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_quality.html)
+[![Outdated](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_outdated.svg)](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_outdated.html)
+[![Vulnerabilities](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_vulnerable.svg)](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_vulnerable.html)
+
 Lusnoc is reliable gem to deal with [Consul](https://www.consul.io). It is designed to be simple and work without dark background magic.
 It is inspired by [consul-mutex](https://github.com/discourse/consul-mutex)(which has hard background magic). 
 
