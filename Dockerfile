@@ -18,7 +18,9 @@ ADD Gemfile Gemfile.lock *.gemspec /home/app/
 ADD lib/lusnoc/version.rb /home/app/lib/lusnoc/
 
 RUN set -ex \
-  && gem install bundler codeclimate-test-reporter && gem update bundler \
+  && curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter \
+  && chmod +x cc-test-reporter \
+  && gem install bundler && gem update bundler \
   && bundle install --jobs=3 \
   && gem cleanup  \
   && rm -rf /tmp/* /var/tmp/* /usr/src/ruby /root/.gem /usr/local/bundle/cache
