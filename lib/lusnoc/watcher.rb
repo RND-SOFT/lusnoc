@@ -1,4 +1,5 @@
-require 'lusnoc/timeouter'
+require 'timeouter'
+require 'lusnoc/exceptions'
 require 'lusnoc/helper'
 
 module Lusnoc
@@ -8,12 +9,12 @@ module Lusnoc
 
     def initialize(base_url,
                    timeout: 0,
-                   exception_class: TimeoutError,
-                   exception_message: 'watch timeout')
+                   eclass: Lusnoc::TimeoutError,
+                   emessage: 'watch timeout')
       @base_url = base_url
       @timeout = timeout
-      @exception_class = exception_class
-      @exception_message = exception_message
+      @eclass = eclass
+      @emessage = emessage
     end
 
     # run Consul blocking request in a loop with timeout support.
@@ -22,13 +23,11 @@ module Lusnoc
       logger.debug "Watch #{@base_url} with #{@timeout.inspect} timeout"
       last_x_consul_index = 1
 
-      Timeouter.new(@timeout,
-                    exception_class:   @exception_class,
-                    exception_message: @exception_message).loop! do |timeouter|
-        wait_condition = timeouter.left ? "&wait=#{timeouter.left.to_i}s" : ''
+      Timeouter.loop!(@timeout, eclass: @eclass, message: @emessage) do |t|
+        wait_condition = t.left ? "&wait=#{t.left.to_i}s" : ''
         url = "#{@base_url}?index=#{last_x_consul_index}#{wait_condition}"
 
-        resp = Lusnoc.http_get(url, timeout: timeouter.left)
+        resp = Lusnoc.http_get(url, timeout: t.left)
         return true if yield(resp.body)
 
         logger.debug "Watch #{@base_url} response: #{resp.body}"

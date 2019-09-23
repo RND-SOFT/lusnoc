@@ -1,6 +1,7 @@
 require './lib/lusnoc/version'
 
-Gem::Specification.new 'lusnoc', Lusnoc::VERSION do |spec|
+Gem::Specification.new 'lusnoc' do |spec|
+  spec.version       = ENV['BUILDVERSION'].to_i > 0 ? "#{Lusnoc::VERSION}.#{ENV['BUILDVERSION'].to_i}" : Lusnoc::VERSION
   spec.authors       = ['Samoilenko Yuri']
   spec.email         = ['kinnalru@gmail.com']
   spec.description   = spec.summary = 'Lusnoc is reliable gem to deal with consul'
@@ -14,12 +15,12 @@ Gem::Specification.new 'lusnoc', Lusnoc::VERSION do |spec|
   spec.add_development_dependency 'bundler', '~> 2.0', '>= 2.0.1'
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec'
-  spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'rspec_junit_formatter'
+  spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'simplecov-console'
   spec.add_development_dependency 'webmock'
 
   spec.add_runtime_dependency 'json'
-  # NOTE not tested on faraday 1.0.0
-  # spec.add_runtime_dependency 'faraday', '>= 0.9', '< 1.0.0'
-  # spec.add_runtime_dependency 'json_pure' if RUBY_VERSION < '1.9.3'
+  spec.add_runtime_dependency 'timeouter'
 end
 

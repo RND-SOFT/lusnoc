@@ -1,4 +1,5 @@
 require 'lusnoc/watcher'
+require 'lusnoc/guard'
 
 module Lusnoc
   class Session
@@ -12,9 +13,12 @@ module Lusnoc
       @ttl = ttl
 
       @id = create_session(name, ttl)
-      yield(self)
+
+      prepare_guard(@id).run do
+        yield(self)
+      end
     ensure
-      destroy_session(@id)
+      destroy_session(@id) if @id
     end
 
     def expired?
@@ -34,14 +38,14 @@ module Lusnoc
     end
 
     def alive!(exception_class = ExpiredError)
-      alive? || (raise exception_class.new("Session #{id} expired"))
+      alive? || (raise exception_class.new("Session[#{@name}:#{@id}] expired"))
     end
 
     def renew
       alive!
       Lusnoc.http_put(build_url("/v1/session/renew/#{@id}"), nil, timeout: 1)
       @expired_at = Time.now + ttl
-      logger.info "Session renewed: #{name}[#{@id}]. Next expiration: #{@expired_at}"
+      logger.info "Session[#{@name}:#{@id}] renewed. Next expiration: #{@expired_at}"
     end
 
     def on_session_die(&block)
@@ -56,49 +60,32 @@ module Lusnoc
                                { timeout: 1 })
         session_id = JSON.parse(resp.body)['ID']
         @expired_at = Time.now + ttl
-        logger.info "Session created: #{name}[#{session_id}]. TTL:#{ttl}s. Next expiration: #{@expired_at}"
+        logger.info "Session[#{name}:#{session_id}] created. TTL:#{ttl}s. Next expiration: #{@expired_at}"
         @alive = true
-        @th = start_watch_thread(session_id)
         session_id
       end
 
-      def destroy_session(session_id)
-        @th.kill rescue nil
-        Lusnoc.http_put(build_url("/v1/session/destroy/#{session_id}"),
-                        nil,
-                        timeout: 1) rescue nil
-        logger.info "Session destroyed: #{name}[#{session_id}]"
-        @alive = false
-        @expired_at = nil
-      end
+      def prepare_guard(session_id)
+        Lusnoc::Guard.new(build_url("/v1/session/info/#{session_id}")) do |guard|
+          guard.condition do |body|
+            !JSON.parse(body).empty? rescue false
+          end
 
-      def start_watch_thread(session_id)
-        Thread.new do
-          logger.debug "Guard thread for Session #{name}[#{session_id}] started"
-
-          if wait_forever_for_session_gone(session_id)
-            logger.error "Session #{name}[#{session_id}] is gone"
+          guard.then do
             @alive = false
             @expired_at = nil
+            logger.info "Session[#{@name}:#{session_id}] is gone"
             @session_die_cb&.call(self)
-          else
-            logger.unknown 'Something is wrong with thread logic'
           end
-        ensure
-          logger.debug "Guard thread for Session #{name}[#{session_id}] finihsed"
         end
       end
 
-      def wait_forever_for_session_gone(session_id)
-        Lusnoc::Watcher.new(build_url("/v1/session/info/#{session_id}"), timeout: 0).run do |body|
-          true if JSON.parse(body).empty?
-        end
-      rescue StandardError => e
-        logger.error "Session #{name}[#{session_id}] watch exception: #{e.inspect}"
-        logger.error e.backtrace.join("\n")
-        true
+      def destroy_session(session_id)
+        @alive = false
+        @expired_at = nil
+        Lusnoc.http_put(build_url("/v1/session/destroy/#{session_id}"), nil, timeout: 1) rescue nil
+        logger.info "Session[#{@name}:#{session_id}] destroyed"
       end
-
 
   end
 end

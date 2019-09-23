@@ -34,9 +34,7 @@ module Lusnoc
     end
 
     def synchronize(timeout: 0, &block)
-      timeouter = Timeouter.new(timeout,
-                                exception_class:   TimeoutError,
-                                exception_message: 'mutex acquisition expired')
+      t = Timeouter::Timer.new(timeout, eclass: TimeoutError, message: 'mutex acquisition expired')
 
       Session.new("mutex_session/#{key}", ttl: @ttl) do |session|
         @session = session
@@ -45,7 +43,7 @@ module Lusnoc
           @on_mutex_lost&.call(self)
         end
 
-        return acquisition_loop! key, session, value, timeouter, &block
+        return acquisition_loop! key, session, value, t, &block
       ensure
         release(key, session.id, timeout: 2) rescue nil
         logger.info("Lock #{key} released for session #{session.name}[#{session.id}]")
@@ -70,13 +68,13 @@ module Lusnoc
         Lusnoc.http_put(build_url("/v1/kv/#{key}?release=#{session.id}"), timeout: 1)
       end
 
-      def acquisition_loop!(key, session, value, timeouter)
+      def acquisition_loop!(key, session, value, t)
         return yield(self) if acquire(key, session, value)
 
         logger.debug("Start #{key} acquisition loop for session #{session.name}[#{session.id}]")
-        timeouter.loop! do
+        t.loop! do
           session.alive!(TimeoutError)
-          wait_for_key_released(key, timeouter.left)
+          wait_for_key_released(key, t.left)
 
           return yield(self) if acquire(key, session, value)
 
@@ -88,9 +86,9 @@ module Lusnoc
       def wait_for_key_released(key, timeout = nil)
         logger.debug "Waiting for key #{key} to be fre of any session"
         Lusnoc::Watcher.new(build_url("/v1/kv/#{key}"),
-                            timeout:           timeout,
-                            exception_class:   TimeoutError,
-                            exception_message: 'mutex acquisition expired').run do |body|
+                            timeout:  timeout,
+                            eclass:   TimeoutError,
+                            emessage: 'mutex acquisition expired').run do |body|
           result = JSON.parse(body.empty? ? '[{}]' : body)
           return true if result.first['Session'].nil?
         end

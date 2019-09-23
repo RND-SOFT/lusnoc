@@ -1,0 +1,16 @@
+version: "2.3"
+
+
+
+services:
+  test-2.6:
+    build:
+      context: .
+      args:
+        RUBY_VERSION: 2.6
+    image: lusnoc-tests:2.6
+    working_dir: /home/app
+    
+    
+
+
