@@ -4,6 +4,7 @@ require 'json'
 require 'lusnoc/configuration'
 require 'lusnoc/session'
 require 'lusnoc/mutex'
+require 'lusnoc/guard'
 
 
 module Lusnoc
