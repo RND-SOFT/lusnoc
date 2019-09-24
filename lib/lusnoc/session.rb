@@ -8,10 +8,14 @@ module Lusnoc
 
     attr_reader :id, :name, :ttl, :alive, :expired_at
 
-    def initialize(name, ttl: 20)
+    def initialize(name, ttl: 20, &block)
       @name = name
       @ttl = ttl
 
+      run(&block) if block_given?
+    end
+
+    def run
       @id = create_session(name, ttl)
 
       prepare_guard(@id).run do
@@ -38,7 +42,7 @@ module Lusnoc
     end
 
     def alive!(exception_class = ExpiredError)
-      alive? || (raise exception_class.new("Session[#{@name}:#{@id}] expired"))
+      @alive || (raise exception_class.new("Session[#{@name}:#{@id}] expired"))
     end
 
     def renew
@@ -50,6 +54,8 @@ module Lusnoc
 
     def on_session_die(&block)
       @session_die_cb = block
+      @session_die_cb&.call(self) if @alive == false
+      self
     end
 
     private

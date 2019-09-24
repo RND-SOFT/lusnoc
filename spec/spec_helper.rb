@@ -19,8 +19,11 @@
 
 # require 'rspec/retry'
 
+require 'webmock/rspec'
 require 'simplecov'
 require 'simplecov-console'
+
+WebMock.enable!
 
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
                                                                  SimpleCov::Formatter::HTMLFormatter, # for gitlab
