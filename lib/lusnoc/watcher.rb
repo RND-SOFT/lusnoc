@@ -40,7 +40,7 @@ module Lusnoc
 
     def build_wait_condition(_url, time_left, max_consul_wait)
       if time_left
-        max = [t.left.to_i, max_consul_wait.to_i].max
+        max = [time_left.to_i, max_consul_wait.to_i].max
         "&wait=#{max}s"
       elsif max_consul_wait
         "&wait=#{max_consul_wait.to_i}s"
