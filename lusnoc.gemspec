@@ -1,4 +1,7 @@
-require './lib/lusnoc/version'
+$:.push File.expand_path('lib', __dir__)
+
+# Maintain your gem's version:
+require 'lusnoc/version'
 
 Gem::Specification.new 'lusnoc' do |spec|
   spec.version       = ENV['BUILDVERSION'].to_i > 0 ? "#{Lusnoc::VERSION}.#{ENV['BUILDVERSION'].to_i}" : Lusnoc::VERSION
