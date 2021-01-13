@@ -1,6 +1,6 @@
 module Lusnoc
 
-  VERSION = '0.1.2'.freeze
+  VERSION = '0.9.0'.freeze
 
 end
 
