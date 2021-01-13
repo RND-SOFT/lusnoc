@@ -43,7 +43,7 @@ TTL will be used in session creation on `#synchronize`:
     puts "We are exclusively owns resource"
   end
 ```
-If mutex cannot be acquired within given timeout Lusnoc::TimeoutError is raised.
+If mutex cannot be acquired within given timeout `Lusnoc::TimeoutError` is raised.
 By default, the "value" of the lock resource will be the hostname of the
 machine that it's running on (so you know who has the lock).  If, for some
 reason, you'd like to set the value to something else, you can do that, too:
