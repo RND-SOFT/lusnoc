@@ -4,14 +4,13 @@
 [![Gem](https://img.shields.io/gem/dt/lusnoc.svg)](https://rubygems.org/gems/lusnoc/versions)
 [![YARD](https://badgen.net/badge/YARD/doc/blue)](http://www.rubydoc.info/gems/lusnoc)
 
-[![Test Coverage](https://api.codeclimate.com/v1/badges/ed48b89a9793a074cd23/test_coverage)](https://codeclimate.com/github/RnD-Soft/lusnoc/test_coverage)
-[![Maintainability](https://api.codeclimate.com/v1/badges/ed48b89a9793a074cd23/maintainability)](https://codeclimate.com/github/RnD-Soft/lusnoc/maintainability)
-[![Quality](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_quality.svg)](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_quality.html)
-[![Outdated](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_outdated.svg)](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_outdated.html)
-[![Vulnerabilities](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_vulnerable.svg)](https://lysander.x.rnds.pro/api/v1/badges/lusnoc_vulnerable.html)
+[![Coverage](https://lysander.rnds.pro/api/v1/badges/lusnoc_coverage.svg)](https://lysander.rnds.pro/api/v1/badges/lusnoc_coverage.html)
+[![Quality](https://lysander.rnds.pro/api/v1/badges/lusnoc_quality.svg)](https://lysander.rnds.pro/api/v1/badges/lusnoc_quality.html)
+[![Outdated](https://lysander.rnds.pro/api/v1/badges/lusnoc_outdated.svg)](https://lysander.rnds.pro/api/v1/badges/lusnoc_outdated.html)
+[![Vulnerabilities](https://lysander.rnds.pro/api/v1/badges/lusnoc_vulnerable.svg)](https://lysander.rnds.pro/api/v1/badges/lusnoc_vulnerable.html)
 
 Lusnoc is reliable gem to deal with [Consul](https://www.consul.io). It is designed to be simple and work without dark background magic.
-It is inspired by [consul-mutex](https://github.com/discourse/consul-mutex)(which has hard background magic). 
+It is inspired by [consul-mutex](https://github.com/kinnalru/consul-mutex)(which has hard background magic). 
 
 ## FAQ
 
@@ -19,7 +18,7 @@ It is inspired by [consul-mutex](https://github.com/discourse/consul-mutex)(whic
 
 Lusnoc allows you to interact with Consul to provide distributed locks(mutex) to your application.
 
-#### What's the difference between lusnoc and [consul-mutex](https://github.com/discourse/consul-mutex) or [diplomat](https://github.com/WeAreFarmGeek/diplomat)
+#### What's the difference between lusnoc and [consul-mutex](https://github.com/kinnalru/consul-mutex) or [diplomat](https://github.com/WeAreFarmGeek/diplomat)
 * consul-mutex starts background thread and  ***the block of code that you pass to #synchronize runs on a separate thread, and can be killed without warning if the mutex determines that it no longer holds the lock.***
 * diplomat provides the basic session/locks functionality but no automated control over it
 
@@ -44,7 +43,7 @@ TTL will be used in session creation on `#synchronize`:
     puts "We are exclusively owns resource"
   end
 ```
-If mutex cannot be acquired within given timeout Lusnoc::TimeoutError is raised.
+If mutex cannot be acquired within given timeout `Lusnoc::TimeoutError` is raised.
 By default, the "value" of the lock resource will be the hostname of the
 machine that it's running on (so you know who has the lock).  If, for some
 reason, you'd like to set the value to something else, you can do that, too:
