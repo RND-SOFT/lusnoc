@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lusnoc (0.9.0)
+    lusnoc (1.0.0)
       json
       timeouter
 
