@@ -11,6 +11,14 @@ services:
     image: lusnoc-tests:2.6
     working_dir: /home/app
     
+  test-3.0:
+    build:
+      context: .
+      args:
+        RUBY_VERSION: 3.0
+    image: lusnoc-tests:3.0
+    working_dir: /home/app
+    
     
 
 

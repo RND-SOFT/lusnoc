@@ -29,6 +29,11 @@ ruby-2.6:
   extends: .test
   variables:
     CASE: '2.6'
+    
+ruby-3.0:
+  extends: .test
+  variables:
+    CASE: '3.0'
 
 
 build:
