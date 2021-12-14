@@ -63,7 +63,7 @@ module Lusnoc
       def create_session(name, ttl)
         resp = Lusnoc.http_put(build_url('/v1/session/create'),
                                { Name: name, TTL: "#{ttl}s", LockDelay: '5s' },
-                               { timeout: 1 })
+                               **{ timeout: 1 })
         session_id = JSON.parse(resp.body)['ID']
         @expired_at = Time.now + ttl
         logger.info "Session[#{name}:#{session_id}] created. TTL:#{ttl}s. Next expiration: #{@expired_at}"
