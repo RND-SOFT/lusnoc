@@ -24,7 +24,7 @@ module Lusnoc
       yield(configuration)
     end
 
-    def http_get(url, timeout: 1)
+    def http_get(url, timeout: 5)
       uri = URI(url)
 
       with_http(uri, timeout: timeout) do |http|
@@ -36,7 +36,7 @@ module Lusnoc
       end
     end
 
-    def http_put(url, value = nil, timeout: 1)
+    def http_put(url, value = nil, timeout: 5)
       uri = URI(url)
       data = value.is_a?(String) ? value : JSON.generate(value) unless value.nil?
 
