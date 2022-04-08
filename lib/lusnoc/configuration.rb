@@ -4,7 +4,7 @@ module Lusnoc
   # Methods for configuring Lusnoc
   class Configuration
 
-    attr_accessor :url, :acl_token, :logger
+    attr_accessor :url, :acl_token, :logger, :http_timeout
 
     # Override defaults for configuration
     # @param url [String] consul's connection URL
@@ -13,6 +13,7 @@ module Lusnoc
       @url = url
       @acl_token = acl_token
       @logger = Logger.new(STDOUT, level: Logger::INFO, progname: 'Lusnoc')
+      @http_timeout = 5
     end
 
   end

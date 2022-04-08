@@ -24,7 +24,7 @@ module Lusnoc
       yield(configuration)
     end
 
-    def http_get(url, timeout: 5)
+    def http_get(url, timeout: Lusnoc.configuration.http_timeout)
       uri = URI(url)
 
       with_http(uri, timeout: timeout) do |http|
@@ -36,7 +36,7 @@ module Lusnoc
       end
     end
 
-    def http_put(url, value = nil, timeout: 5)
+    def http_put(url, value = nil, timeout: Lusnoc.configuration.http_timeout)
       uri = URI(url)
       data = value.is_a?(String) ? value : JSON.generate(value) unless value.nil?
 
@@ -55,14 +55,33 @@ module Lusnoc
     private
 
       def with_http(uri, timeout:)
-        Net::HTTP.start(uri.host, uri.port,
-                        use_ssl:          uri.scheme == 'https',
-                        read_timeout:     timeout,
-                        open_timeout:     1,
-                        continue_timeout: 1,
-                        write_timeout:    1,
-                        max_retries:      0) do |http|
-          yield(http)
+        with_retry(delay: 0.1) do
+          Net::HTTP.start(uri.host, uri.port,
+                          use_ssl:          uri.scheme == 'https',
+                          read_timeout:     timeout,
+                          open_timeout:     timeout,
+                          continue_timeout: timeout,
+                          write_timeout:    timeout,
+                          max_retries:      1) do |http|
+            yield(http)
+          end
+        end
+      end
+
+      def with_retry(count = 2, delay: 1, klass: nil)
+        begin
+          retries ||= 0
+          yield(retries)
+        rescue StandardError => e
+          sleep(delay + (retries**2) * delay)
+          if (retries += 1) < count
+            retry
+          else
+            raise if klass.nil?
+            return nil if klass == :skip
+
+            raise klass.new(e.message)
+          end
         end
       end
 
