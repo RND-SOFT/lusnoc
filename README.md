@@ -30,7 +30,7 @@ Lusnoc allows you to interact with Consul to provide distributed locks(mutex) to
 * Lusnoc enforces you to manualy renew session(through callback or explicit check) but provide background session checker
 * Lusnoc tries to carefuly handle timeouts and expiration using Consul [blocking queries](https://www.consul.io/api/features/blocking.html)
 
-# Usage
+## Usage
 
 Simply instantiate a new `Lusnoc::Mutex`, giving it the key you want to use
 as the "lock":
@@ -106,7 +106,7 @@ Typical usage scenario:
   end
 ```
 
-# Installation
+## Installation
 
 It's a gem:
 ```bash
@@ -116,5 +116,10 @@ There's also the wonders of [the Gemfile](http://bundler.io):
 ```ruby
   gem 'lusnoc'
 ```
+
+## Mirrors
+
+* GitFlic: [https://gitflic.ru/project/rndsoft/lusnoc](https://gitflic.ru/project/rndsoft/lusnoc)
+* Github: [https://github.com/RND-SOFT/lusnoc](https://github.com/RND-SOFT/lusnoc) 
 
 
