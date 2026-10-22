@@ -18,7 +18,7 @@ ADD Gemfile Gemfile.lock *.gemspec /home/app/
 ADD lib/lusnoc/version.rb /home/app/lib/lusnoc/
 
 RUN set -ex \
-  && gem install bundler && gem update bundler \
+  && gem install bundler -v 2.4.22 && gem update bundler \
   && bundle install --jobs=3 \
   && gem cleanup  \
   && rm -rf /tmp/* /var/tmp/* /usr/src/ruby /root/.gem /usr/local/bundle/cache
