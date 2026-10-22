@@ -26,10 +26,9 @@ module Lusnoc
 
     def http_get(url, timeout: Lusnoc.configuration.http_timeout)
       uri = URI(url)
-
       with_http(uri, timeout: timeout) do |http|
         req = Net::HTTP::Get.new(uri)
-
+        req["X-Consul-Token"] = Lusnoc.configuration.acl_token if Lusnoc.configuration.acl_token
         # configure http and request before send
         yield(http, req) if block_given?
         http.request(req)
@@ -39,13 +38,12 @@ module Lusnoc
     def http_put(url, value = nil, timeout: Lusnoc.configuration.http_timeout)
       uri = URI(url)
       data = value.is_a?(String) ? value : JSON.generate(value) unless value.nil?
-
       with_http(uri, timeout: timeout) do |http|
         req = Net::HTTP::Put.new(uri).tap do |r|
           r.body = data
           r['Content-Type'] = 'application/json'
         end
-
+        req["X-Consul-Token"] = Lusnoc.configuration.acl_token if Lusnoc.configuration.acl_token
         # configure http and request before send
         yield(http, req) if block_given?
         http.request(req)
