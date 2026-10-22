@@ -28,7 +28,7 @@ module Lusnoc
       uri = URI(url)
       with_http(uri, timeout: timeout) do |http|
         req = Net::HTTP::Get.new(uri)
-        req["X-Consul-Token"] = Lusnoc.configuration.acl_token if Lusnoc.configuration.acl_token
+        req["X-Consul-Token"] = Lusnoc.configuration.acl_token if Lusnoc.configuration.acl_token.present?
         # configure http and request before send
         yield(http, req) if block_given?
         http.request(req)
@@ -43,7 +43,7 @@ module Lusnoc
           r.body = data
           r['Content-Type'] = 'application/json'
         end
-        req["X-Consul-Token"] = Lusnoc.configuration.acl_token if Lusnoc.configuration.acl_token
+        req["X-Consul-Token"] = Lusnoc.configuration.acl_token if Lusnoc.configuration.acl_token.present?
         # configure http and request before send
         yield(http, req) if block_given?
         http.request(req)
